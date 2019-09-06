@@ -42,10 +42,10 @@ class ModeloRol{
 		return $roles;
 
 	}
-	public function PresentarRolesActualizar($id){
+	public function PresentarRolesActualizar($id_empleado,$id_rol){
 		$objetoControlador = new ControladorRol();
 
-		$roles = $objetoControlador->PresentarRolActualizar($id);
+		$roles = $objetoControlador->PresentarRolActualizar($id_empleado,$id_rol);
 
 		return $roles;
 	}

@@ -35,11 +35,12 @@ class ControladorRol{
 
 		return $resultado;
 	}
-	public function PresentarRolActualizar($id){
+	public function PresentarRolActualizar($id_empleado,$id_rol){
 		$objetoConexion = new Conexion();
 		$objetoConexion->conectarDB();
 
-		$sql = "SELECT empleado_id, rol_id FROM empleado_rol WHERE empleado_id = $id";
+		// $sql = "SELECT empleado_id, rol_id FROM empleado_rol WHERE empleado_id = $id";
+		$sql = "SELECT empleado_id, rol_id FROM empleado_rol WHERE empleado_id = $id_empleado && rol_id = $id_rol";
 		
 		$roles = mysqli_query($objetoConexion->con,$sql);
 
@@ -50,7 +51,17 @@ class ControladorRol{
 		$objetoConexion = new Conexion();
 		$objetoConexion->conectarDB();
 
-		$sql = "UPDATE empleado_rol SET empleado_id ='$roles->id_empleado', rol_id = '$roles->id_rol' WHERE rol_id = '$roles->id_empleado'";
+		$sql = "SELECT empleado_id, rol_id FROM empleado_rol WHERE empleado_id = $id_empleado && rol_id = $id_rol";
+
+		$resultado1 = mysql_query($objetoConexion->con,$sql);
+		if(!empty($resultado1)){
+			$sql = "DELETE FROM empleado_rol WHERE empleado_id = $id_empleado && rol_id = $id_rol";
+		}else{
+			$sql = "INSERT INTO empleado_rol(rol_id,empleado_id) VALUES('$roles->id','$roles->seleccion')";
+		}
+		$resultados = mysql_query($objetoConexion->con,$sql);
+		return $resultados;
+		// $sql = "UPDATE empleado_rol SET empleado_id ='$roles->id_empleado', rol_id = '$roles->id_rol' WHERE rol_id = '$roles->id_empleado'";
 
 	}
 	public function PresentarDetallesRol($id){

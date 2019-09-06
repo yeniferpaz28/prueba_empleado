@@ -5,7 +5,10 @@ require_once("../modelo/ModeloEmpleado.php");
 require_once("../modelo/ModeloArea.php");
 require_once("../modelo/ModeloRol.php");
 
-
+if(isset($_GET['checkEnOn'])){
+  $p = ($_GET['checkEnOn']);
+  echo "hola jeni";
+}
 // validar valor del boletin
 $vBoletin = 0;
 if(isset($_POST['boletin'])){
@@ -80,7 +83,7 @@ if (isset($_POST['btnActualizar'])) {
     if (!empty($_POST['id_rol'])){
       foreach ($_POST['id_rol'] as $seleccion) {
         // echo "<p>".$seleccion."</p>";
-        $rol = $objetoRol->GuardarRoles($seleccion,$id);
+        $rol = $objetoRol->ActualizarRoles($seleccion,$id);
       }
     }
 
@@ -114,11 +117,9 @@ if (isset($_POST['btnActualizar'])) {
 }
 }
 }
-
-
 $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
-?>
-<script src="../jquery/jquery-3.4.1.min.js"></script>
+?>         
+</script>
 <form method="post">
 	<div class="container-fluid">
 	<div class="form-row" id="row1">
@@ -191,44 +192,35 @@ $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
     </div>
   </div>
   <!-- rol -->
-    <?php 
-    $nuevo = 0;
-    $cant = 0;
-   // $listaRoles = $objetoRol->PresentarRoles();
-   // while ($roles = mysqli_fetch_object($listaRoles)) {
-   //   $nuevo +=1;
-   //   $nombre_rol = $roles->nombre_rol;
-   //   $id_rol = $roles->id_rol;
-   
-$presentarRoles = $objetoRol->PresentarRolesActualizar($id);
-   while($filas = mysqli_fetch_object($presentarRoles)){
-         $nuevo +=1;
-        $id_rolG = $filas->rol_id;
-        $nombre_rol = $filas->nombre;
-        // $checked = ($id_rolG == $id_rol)? 'checked':'';
-       
-        // echo $cant;
-        echo $id_rolG.'<br>'; 
- ?>
-  <div class="form-group row">
-    <?php if($nuevo<=1){ ?>
-  <label for="descripciones" class="col-sm-2 col-form-label pt-0" required>Roles *</label>
-    <div class="col-sm-10">
-      <?php }else{ ?>
+       <?php
+        $i = 0;
+        $listaRoles = $objetoRol->PresentarRoles();
+        while ($roles = mysqli_fetch_object($listaRoles)) {
+          $i++;
+          $nombre_rol = $roles->nombre_rol;
+          $id_rol = $roles->id_rol;
+       ?>
+    <div class="form-group row">
+      <?php if($i<=1){ ?>
+      <label for="descripciones" class="col-sm-2 col-form-label pt-0" required>Roles *</label>
+      <div class="col-sm-10">
+        <?php }else{ ?>
         <div class="col-sm-10 offset-sm-2">
-        <?php } ?>
-      <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="id_rol" name="id_rol[]" value="<?php echo $id_rol;?>" <?php if(isset($id_rolG)) echo 'checked';?>  >
-        <label class="form-check-label" for="id_rol">
-          <?php 
-          echo $nombre_rol; 
-                    
-          ?>
-        </label>
+          <?php } ?>
+        <div class="form-check">
+          <?php $presentarRoles = $objetoRol->PresentarRolesActualizar($id,$id_rol);
+          if($filas = mysqli_fetch_object($presentarRoles)){ ?>
+          <input class="form-check-input" type="checkbox" id="id_rol" name="id_rol[]" value="<?php echo $id_rol;?>" checked >
+        <?php }else{ ?>
+          <input class="form-check-input" type="checkbox" id="id_rol" name="id_rol[]" value="<?php echo $id_rol;?>" >
+        <?php }?>
+          <label class="form-check-label" for="id_rol">
+          <?php echo $nombre_rol; ?>
+          </label>
+        </div>  
       </div>
-    </div>    
-  </div>
-    <?php }?>
+    </div>
+  <?php }?>
     <div class="form-group row">
       <div class="col-sm-10">
         <button type="submit" class="btn btn-primary" name="btnActualizar" id="btnActualizar">Actualizar</button>
@@ -239,21 +231,4 @@ $presentarRoles = $objetoRol->PresentarRolesActualizar($id);
 </form>
 <?php require_once("../includes/footer.php"); ?>
 
-<!-- <script type="text/javascript">
-    $(document).ready(function(){
-      $("#id_rol").on("click", function(){
 
-        if($("#id_rol").is(":checked")){
-          // alert("se selecciono el control").val("#id_rol");
-
-          alert($(this).val());
-        }
-        if($("#id_rol").not(":checked")){
-          // alert("se selecciono el control").val("#id_rol");
-
-          alert($(this).val());
-        }
-       
-      });
-    });
-</script> -->

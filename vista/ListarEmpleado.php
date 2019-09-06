@@ -1,26 +1,23 @@
 <?php
+session_start();
 require_once("../includes/header.php");
 require_once("../modelo/ModeloEmpleado.php");
 
-// mensaje de eliminar
-if(isset($_GET['mensaje1'])){
-	echo "<div class='alert alert-primary alert-dismissible fade show' role='alert'>
-		 	El empleado ha sido eliminado exitosamente
-		 	<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-		    	<span aria-hidden='true'>&times;</span>
-		  	</button>
-		</div>";
-
-}else if(isset($_GET['mensaje1'])){
-	echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-		  	Error al eliminar empleado
-		  	<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-		    	<span aria-hidden='true'>&times;</span>
-		  	</button>
-		</div>";
+// mensaje 
+  if(isset($_SESSION['message'])){
+// despues de la parte del alert, la sesion hace que se traiga el dato de cual era el tipo de color que se queria
+    ?>
+    <div class="alert alert-<?=$_SESSION['message_type']?> alert-dismissible fade show" role="alert">
+      <!-- para pintar el mensaje se hace lo siguiente -->
+      <?= $_SESSION['message']?>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <?php
+// <!-- aqui limpiara los datos que esten en sesion, para que no se quede el mensaje en el index, todo el tiempo -->
+  session_unset();
 }
-// listar datos
-
 ?>
 <div class="container-fluid">
 	<div class="form-row" id="row1">
@@ -37,8 +34,9 @@ if(isset($_GET['mensaje1'])){
       <th scope="col">Nombre</th>
       <th scope="col">Email</th>
       <th scope="col">Sexo</th>
-      <th scope="col">Area</th>
-      <th scope="col">Boletin</th>
+      <th scope="col">Área</th>
+      <th scope="col">Boletín</th>
+      <th scope="col">Detalles</th>
       <th scope="col">Modificar</th>
       <th scope="col">Eliminar</th>
     </tr>
@@ -64,8 +62,9 @@ if(isset($_GET['mensaje1'])){
       <td><?php echo $sexo;?></td>
       <td><?php echo $area_nombre;?></td>
       <td><?php echo $boletin;?></td>
+      <td><a href="DetallesEmpleado.php?id=<?php echo $id?>"><i class="fas fa-clipboard-list"></i></a></td>
       <td><a href="ActualizarEmpleado.php?id=<?php echo $id?>"><i class="fas fa-edit"></i></a></td>
-      <td><a href="EliminarEmpleado.php?id=<?php echo $id?>"><i class="fas fa-trash-alt"></i></a></td>
+      <td><a href="EliminarEmpleado.php?id=<?php echo $id?>"><i class="fas fa-trash-alt"></i></a></td>         
     </tr>
     <?php
 		}

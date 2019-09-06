@@ -12,14 +12,16 @@ class ControladorEmpleado extends Conexion{
 		$sql = "INSERT INTO empleados(nombre,email,sexo,area_id,boletin,descripcion) VALUES('$empleado->nombre','$empleado->email','$empleado->sexo','$empleado->area_id','$empleado->boletin','$empleado->descripcion')";
 
 		$resultado = mysqli_query($objetoConexion->con,$sql);
-		return $resultado;
+		$ultimoId = mysqli_insert_id($objetoConexion->con);
+		// return $resultado;
+		return $ultimoId;
 	}
 	//presentarEmpleados
 	public function ListarEmpleado(){
 		$objetoConexion = new Conexion();
 		$objetoConexion->conectarDB();
 
-		$sql = "SELECT empleados.id AS id_empleado, empleados.nombre,email,sexo,descripcion, ".
+		$sql = "SELECT empleados.id AS id_empleado, empleados.nombre,email,descripcion, ".
 				"CASE WHEN sexo = 'F' THEN 'Femenino' " .
 				"WHEN sexo = 'M' THEN 'Masculino' END AS sexo, " .
 				"areas.id AS area_id, areas.nombre AS area_nombre, " .
@@ -37,11 +39,16 @@ class ControladorEmpleado extends Conexion{
 
 		$sql = "SELECT * FROM empleados WHERE id = $id";
 
+		// $sql = "SELECT empleados.id,empleados.nombre,empleados.email,empleados.sexo,empleados.area_id,empleados.boletin,empleados.descripcion,empleado_rol.empleado_id,empleado_rol.rol_id
+		// 		FROM empleados 
+  //               INNER JOIN empleado_rol
+		// 		WHERE empleados.id = empleado_rol.empleado_id && empleados.id = $id ";
 		$resultado = mysqli_query($objetoConexion->con,$sql);
 
 		$resultadoObjeto = mysqli_fetch_object($resultado);
 
 		return $resultadoObjeto;
+		// return $resultado;
 
 	}
 	// actualizar empleado
@@ -82,6 +89,15 @@ class ControladorEmpleado extends Conexion{
 
 		return $resultadoMaximo;
 	}
+	public function PresentarDetalles($id){
+		$objetoConexion = new Conexion();
+		$objetoConexion->conectarDB();
 
+		$sql = "SELECT empleados.id AS id_empleado, empleados.nombre, empleados.email, empleados.sexo, empleados.area_id, empleados.boletin, empleados.descripcion, areas.id AS area_id, areas.nombre AS nombre_area FROM empleados INNER JOIN areas ON areas.id = empleados.area_id WHERE empleados.id = $id";
+		$resultado = mysqli_query($objetoConexion->con,$sql);
+
+		$resultadoObjeto = mysqli_fetch_object($resultado);
+		return $resultadoObjeto;
+	}
 }
 ?>

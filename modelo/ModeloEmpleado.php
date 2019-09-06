@@ -73,6 +73,14 @@ class ModeloEmpleado{
 
 		return $empleado;
 	}
+	public function PresentarDetalles($id){
+		$objetoEmpleado = new ControladorEmpleado();
+		$empleado = $objetoEmpleado->PresentarDetalles($id);
+
+		return $empleado;
+
+
+	}
 
 }
 

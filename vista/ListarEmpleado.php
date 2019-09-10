@@ -17,6 +17,7 @@ require_once("../modelo/ModeloEmpleado.php");
   <?php
 // <!-- aqui limpiara los datos que esten en sesion, para que no se quede el mensaje en el index, todo el tiempo -->
   session_unset();
+  
 }
 ?>
 <div class="container-fluid">

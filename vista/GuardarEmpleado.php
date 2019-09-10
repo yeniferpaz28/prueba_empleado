@@ -26,37 +26,37 @@ if (isset($_POST['btnGuardar'])) {
     // validar
     $email = filter_var($email, FILTER_SANITIZE_EMAIL);
     if(trim($nombre)==''){
-      $_SESSION['message'] = 'Debe agregar un nombre';
-      $_SESSION['message_type']='danger';
+      $_SESSION['message_error'] = 'Debe agregar un nombre';
+      $_SESSION['message_type_error']='danger';
     }    
     // Luego validamos el email
     else if(trim($email)==''){
-      $_SESSION['message'] = 'Debe agregar un correo';
-      $_SESSION['message_type']='danger';
+      $_SESSION['message_error'] = 'Debe agregar un correo';
+      $_SESSION['message_type_error']='danger';
 
     } 
     else if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
         // echo("$email es una dirección de email válida");
-      $_SESSION['message'] = 'No es una dirección válida de correo';
-      $_SESSION['message_type']='danger';
+      $_SESSION['message_error'] = 'No es una dirección válida de correo';
+      $_SESSION['message_type_error']='danger';
     }
     else if(empty(($_POST['sexo']))){
       // error $sexo;      
-      $_SESSION['message'] = 'Debe seleccionar un sexo';
-      $_SESSION['message_type']='danger';
+      $_SESSION['message_error'] = 'Debe seleccionar un sexo';
+      $_SESSION['message_type_error']='danger';
 
     }
     else if(trim($area_id)==''){
-      $_SESSION['message'] = 'Debe seleccionar una área';
-      $_SESSION['message_type']='danger';
+      $_SESSION['message_error'] = 'Debe seleccionar una área';
+      $_SESSION['message_type_error']='danger';
     }
     else if(trim($descripcion)==''){
-      $_SESSION['message'] = 'Debe agregar una descripción';
-      $_SESSION['message_type']='danger';
+      $_SESSION['message_error'] = 'Debe agregar una descripción';
+      $_SESSION['message_type_error']='danger';
     } 
     else if(empty($_POST['id_rol'])){
-      $_SESSION['message'] = 'Debe seleccionar al menos un rol';
-      $_SESSION['message_type']='danger';
+      $_SESSION['message_error'] = 'Debe seleccionar al menos un rol';
+      $_SESSION['message_type_error']='danger';
     }
    else{
   $sexo = ($_POST['sexo']);
@@ -85,12 +85,12 @@ if (isset($_POST['btnGuardar'])) {
 	}
 }
 }
-if(isset($_SESSION['message'])){
+if(isset($_SESSION['message_error'])){
 // despues de la parte del alert, la sesion hace que se traiga el dato de cual era el tipo de color que se queria
     ?>
-    <div class="alert alert-<?=$_SESSION['message_type']?> alert-dismissible fade show" role="alert">
+    <div class="alert alert-<?=$_SESSION['message_type_error']?> alert-dismissible fade show" role="alert">
       <!-- para pintar el mensaje se hace lo siguiente -->
-      <?= $_SESSION['message']?>
+      <?= $_SESSION['message_error']?>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

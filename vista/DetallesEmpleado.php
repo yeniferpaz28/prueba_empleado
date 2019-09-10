@@ -48,19 +48,19 @@ $datosEmpleado = $objetoEmpleado->PresentarDetalles($id);
     </div>
   </div>
   <div class="form-group row">
-    <label for="nombre" class="col-sm-2 col-form-label">Area</label>
+    <label for="nombre" class="col-sm-2 col-form-label">Área</label>
     <div class="col-sm-10">
       <p class="pdetalle"><?php echo $datosEmpleado->nombre_area;?></p>
     </div>
   </div>
   <div class="form-group row">
-    <label for="nombre" class="col-sm-2 col-form-label">Descripcion</label>
+    <label for="nombre" class="col-sm-2 col-form-label">Descripción</label>
     <div class="col-sm-10">
     <p class="pdetalle"><?php echo $datosEmpleado->descripcion;?></p>
     </div>
   </div>
   <div class="form-group row">
-    <label for="nombre" class="col-sm-2 col-form-label">Boletin</label>
+    <label for="nombre" class="col-sm-2 col-form-label">Boletín</label>
     <div class="col-sm-10">
     <p class="pdetalle"><?php if($datosEmpleado->boletin == 1) echo 'Sí'; else if($datosEmpleado->boletin == 0) echo 'No';?></p>
     </div>

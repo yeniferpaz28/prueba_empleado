@@ -7,9 +7,11 @@ function funciones(elemento){
       
     if(elemento.length>0){
       var checkEnOn = elemento;
-      
-      if(checkEnOn==arrayCheck){
+ var indice = arrayCheck.indexOf(checkEnOn);
+      console.log("El elemento buscado está en el índice ", indice);
+      if(indice >= 0){
         console.log("no se puede agregar");
+        arrayCheck.splice(indice,1);
       }else{
         arrayCheck.push(checkEnOn);
       }

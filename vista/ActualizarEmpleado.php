@@ -25,7 +25,7 @@ if(isset($_GET['id'])){
 	$maxId = $objetoEmpleado->MaximoId();
 	$mId = $maxId->id_empleado;
 	if(!is_numeric($_GET['id']) || $_GET['id']<=0 || $mId < $_GET['id']){
-		
+
 		header("location: ListarEmpleado.php");
 	}
 }else{
@@ -44,57 +44,37 @@ if (isset($_POST['btnActualizar'])) {
 
       $email = filter_var($email, FILTER_SANITIZE_EMAIL);
       if(trim($nombre)==''){
-        $_SESSION['message_error'] = 'Debe agregar un nombre';
-        $_SESSION['message_type_error']='danger';
-      }    
+        $_SESSION['message_error'][] = 'Debe agregar un nombre';
+      }else if (!preg_match ("/^[a-z A-Z]+$/", $nombre)) {
+      $_SESSION['message_error'][] = 'nombre no valida';
+    }
     // Luego validamos el email
-      else if(trim($email)==''){
-        $_SESSION['message_error'] = 'Debe agregar un correo';
-        $_SESSION['message_type_error']='danger';
-
-      } 
-      else if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
-          // echo("$email es una dirección de email válida");
-        $_SESSION['message_error'] = 'No es una dirección válida de correo';
-        $_SESSION['message_type_error']='danger';
+      if(trim($email)==''){
+        $_SESSION['message_error'][] = 'Debe agregar un correo';
       }
-      else if(empty(($_POST['sexo']))){
-        // error $sexo;      
-        $_SESSION['message_error'] = 'Debe seleccionar un sexo';
-        $_SESSION['message_type_error']='danger';
-
+      if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
+        $_SESSION['message_error'][] = 'No es una dirección válida de correo';
       }
-      else if(trim($area_id)==''){
-        $_SESSION['message_error'] = 'Debe seleccionar una área';
-        $_SESSION['message_type_error']='danger';
+      if(empty(($_POST['sexo']))){
+        $_SESSION['message_error'][] = 'Debe seleccionar un sexo';
       }
-      else if(trim($descripcion)==''){
+      if(trim($area_id)==''){
+        $_SESSION['message_error'][] = 'Debe seleccionar una área';
+      }
+      if(trim($descripcion)==''){
         $_SESSION['message_error'] = 'Debe agregar una descripción';
-        $_SESSION['message_type_error']='danger';
+      }else
+      if (!preg_match ("/^[a-z0-9A-Z,. ]+$/", $descripcion)) {
+      $_SESSION['message_error'][] = 'Descripción no valida';
       }
-      else 
-        // if(($_POST['id_rol'])=='' || ){
-        // $_SESSION['message_error'] = 'Debe seleccionar al menos un rol';
-        // $_SESSION['message_type_error']='danger';
-        if (!isset($_POST['id_rol']) && empty($_POST['id_rol_2'])) {
-           $_SESSION['message_error'] = 'Debe seleccionar al menos un rol';
-        $_SESSION['message_type_error']='danger';
-        
-      }
-      else{
-		
-		   $empleado = $objetoEmpleado->ActualizarEmpleados($id,$nombre,$email,$sexo,$area_id,$boletin,$descripcion);
+      if (!isset($_POST['id_rol']) && empty($_POST['id_rol_2'])) {
+         $_SESSION['message_error'][] = 'Debe seleccionar al menos un rol';
+      }else if(!isset($_SESSION['message_error'])){
 
-        // if (!empty($_POST['id_rol_1'])){
-        //   foreach ($_POST['id_rol_1'] as $seleccion) {
-        //     // echo "<p>".$seleccion."</p>";
-        //     $rol = $objetoRol->ActualizarRoles($seleccion,$id);
-        //   }
-        // }
-        if (!empty($_POST['id_rol_2'])){
-          foreach ($_POST['id_rol_2'] as $seleccion) {
-            // echo "<p>".$seleccion."</p>";
-            $rol = $objetoRol->GuardarRoles($seleccion,$id);
+		   $empleado = $objetoEmpleado->ActualizarEmpleados($id,$nombre,$email,$sexo,$area_id,$boletin,$descripcion);
+      if (!empty($_POST['id_rol_2'])){
+        foreach ($_POST['id_rol_2'] as $seleccion) {
+          $rol = $objetoRol->GuardarRoles($seleccion,$id);
           }
         }
         if(!empty($_POST['id_rol_2'])){
@@ -107,12 +87,12 @@ if (isset($_POST['btnActualizar'])) {
       		// if($empleado){
       			 $_SESSION['message'] = 'Datos actualizados correctamente';
             $_SESSION['message_type']='success';
-            // header("location: ActualizarEmpleado.php");      
+            // header("location: ActualizarEmpleado.php");
 
           }else{
             $_SESSION['message'] = 'Error al actualizar datos';
             $_SESSION['message_type']='danger';
-            // header("location: ActualizarEmpleado.php"); 
+            // header("location: ActualizarEmpleado.php");
       	}
        if(isset($_SESSION['message'])){
       // despues de la parte del alert, la sesion hace que se traiga el dato de cual era el tipo de color que se queria
@@ -127,34 +107,29 @@ if (isset($_POST['btnActualizar'])) {
         <?php
       // <!-- aqui limpiara los datos que esten en sesion, para que no se quede el mensaje en el index, todo el tiempo -->
         session_unset();
-        // header("Location: Pagina.php?mensaje=$mensaje");
-         
       }
-      
-
     }
   }
 }
-
 $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
 // mensajes cuando no se selecciona
       if(isset($_SESSION['message_error'])){
-      // despues de la parte del alert, la sesion hace que se traiga el dato de cual era el tipo de color que se queria
+        foreach ($_SESSION['message_error'] as $row) {
           ?>
-          <div class="alert alert-<?=$_SESSION['message_type_error']?> alert-dismissible fade show" role="alert">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <!-- para pintar el mensaje se hace lo siguiente -->
-            <?= $_SESSION['message_error']?>
+            <?php echo $row; ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-        <?php
+        <?php }
       // <!-- aqui limpiara los datos que esten en sesion, para que no se quede el mensaje en el index, todo el tiempo -->
         session_unset();
         // header("Location: Pagina.php?mensaje=$mensaje");
-         
+
       }
-?>   
+?>
  <!--no permitir que se recargue la pagina -->
 <script>
     if ( window.history.replaceState ) {
@@ -166,7 +141,7 @@ $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
 	<div class="form-row" id="row1">
 		<div class="col-sm-4">
 			<h1>Actualizar empleados</h1>
-		</div>		
+		</div>
 	</div>
   <div class="form-group row">
     <label for="nombre" class="col-sm-2 col-form-label">Nombre Completo*</label>
@@ -196,7 +171,7 @@ $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
           <label class="form-check-label" for="sexoFemenino">
             Femenino
           </label>
-        </div>        
+        </div>
       </div>
     </div>
   </fieldset>
@@ -214,7 +189,7 @@ $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
           }
       ?>
     </select>
-    </div>    
+    </div>
   </div>
   <div class="form-group row">
     <label for="descripciones" class="col-sm-2 col-form-label">Descripción *</label>
@@ -234,14 +209,14 @@ $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
     </div>
   </div>
   <!-- rol -->
-       <?php
-        $i = 0;
-        $listaRoles = $objetoRol->PresentarRoles();
-        while ($roles = mysqli_fetch_object($listaRoles)) {
-          $i++;
-          $nombre_rol = $roles->nombre_rol;
-          $id_rol = $roles->id_rol;
-       ?>
+   <?php
+    $i = 0;
+    $listaRoles = $objetoRol->PresentarRoles();
+    while ($roles = mysqli_fetch_object($listaRoles)) {
+      $i++;
+      $nombre_rol = $roles->nombre_rol;
+      $id_rol = $roles->id_rol;
+   ?>
     <div class="form-group row">
       <?php if($i<=1){ ?>
       <label for="descripciones" class="col-sm-2 col-form-label pt-0" required>Roles *</label>
@@ -254,17 +229,15 @@ $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
           if($filas = mysqli_fetch_object($presentarRoles)){   ?>
           <input class="form-check-input" type="checkbox" id="id_rol" name="id_rol[]" value="<?php echo $id_rol;?>" checked onclick="funciones(this);">
           <label class="form-check-label" for="id_rol">
-          <!-- // $variableIdrol = '<input class="form-check-input" type="checkbox" id="id_rol" name="id_rol[]" value="'.$id_rol.'" checked>'; -->
-          <!-- echo $variableIdrol; -->        
         <?php }else{ ?>
           <input class="form-check-input" type="checkbox" id="id_rol_2" name="id_rol_2[]" value="<?php echo $id_rol;?>" >
           <label class="form-check-label" for="id_rol_2">
         <?php }?>
-          
+
           <?php echo $nombre_rol; ?>
           </label>
 
-        </div>  
+        </div>
       </div>
     </div>
   <?php }?>

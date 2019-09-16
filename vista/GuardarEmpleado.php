@@ -14,64 +14,57 @@ if(isset($_POST['boletin'])){
 	}
 }
 if (isset($_POST['btnGuardar'])) {
-	
+
 	if(isset($_POST) && !empty($_POST)){
 		$nombre = ($_POST['nombre']);
 		$email = ($_POST['email']);
-		
+
 		$descripcion = ($_POST['descripcion']);
 		$area_id = ($_POST['area_id']);
 		$boletin = $vBoletin;
-    // $id_rol = ($_POST['id_rol']);
-    // validar
+
     $email = filter_var($email, FILTER_SANITIZE_EMAIL);
     if(trim($nombre)==''){
-      $_SESSION['message_error'] = 'Debe agregar un nombre';
-      $_SESSION['message_type_error']='danger';
-    }    
+      $_SESSION['message_error'][] = 'Debe agregar un nombre';
+    }else if (!preg_match ("/^[a-z A-Z]+$/", $nombre)) {
+      $_SESSION['message_error'][] = 'Nombre no válido';
+    }
     // Luego validamos el email
-    else if(trim($email)==''){
-      $_SESSION['message_error'] = 'Debe agregar un correo';
-      $_SESSION['message_type_error']='danger';
-
-    } 
-    else if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
-        // echo("$email es una dirección de email válida");
-      $_SESSION['message_error'] = 'No es una dirección válida de correo';
-      $_SESSION['message_type_error']='danger';
+    if(trim($email)==''){
+      $_SESSION['message_error'][] = 'Debe agregar un correo';
+    }else
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) === true) {
+      $_SESSION['message_error'][] = 'No es una dirección válida de correo';
     }
-    else if(empty(($_POST['sexo']))){
-      // error $sexo;      
-      $_SESSION['message_error'] = 'Debe seleccionar un sexo';
-      $_SESSION['message_type_error']='danger';
-
+    if(empty(($_POST['sexo']))){
+      $_SESSION['message_error'][] = 'Debe seleccionar un sexo';
     }
-    else if(trim($area_id)==''){
-      $_SESSION['message_error'] = 'Debe seleccionar una área';
-      $_SESSION['message_type_error']='danger';
+    if(trim($area_id)==''){
+      $_SESSION['message_error'][] = 'Debe seleccionar una área';
     }
-    else if(trim($descripcion)==''){
-      $_SESSION['message_error'] = 'Debe agregar una descripción';
-      $_SESSION['message_type_error']='danger';
-    } 
-    else if(empty($_POST['id_rol'])){
-      $_SESSION['message_error'] = 'Debe seleccionar al menos un rol';
-      $_SESSION['message_type_error']='danger';
+    if(trim($descripcion)==''){
+      $_SESSION['message_error'][] = 'Debe agregar una descripción';
+    }else if (!preg_match ("/^[a-z0-9A-Z,. ]+$/", $descripcion)) {
+      $_SESSION['message_error'][] = 'Descripción no válida';
     }
-   else{
-  $sexo = ($_POST['sexo']);
+    if(!isset($_POST['id_rol'])){
+      $_SESSION['message_error'][] = 'Debe seleccionar al menos un rol';
+    }else if (!preg_match ("/^[0-9]+$/", $_POST['id_rol'])) {
+      $_SESSION['message_error'][] = 'Rol no valido';
+    }
+   else if(!isset($_SESSION['message_error'])){
+    $sexo = ($_POST['sexo']);
     $objetoEmpleado = new ModeloEmpleado();
 		$empleado = $objetoEmpleado->GuardarEmpleados($nombre,$email,$sexo,$area_id,$boletin,$descripcion);
 
     $objetoRol = new ModeloRol();
-         
+
     if (!empty($_POST['id_rol'])){
       foreach ($_POST['id_rol'] as $seleccion) {
         // echo "<p>".$seleccion."</p>";
         $rol = $objetoRol->GuardarRoles($seleccion,$empleado);
       }
-    } 
-           // $rol = $objetoRol->GuardarRoles($id_rol,$empleado);
+    }
 		if($empleado && $rol){
       $_SESSION['message'] = 'Datos guardados correctamente';
       $_SESSION['message_type']='success';
@@ -86,16 +79,16 @@ if (isset($_POST['btnGuardar'])) {
 }
 }
 if(isset($_SESSION['message_error'])){
-// despues de la parte del alert, la sesion hace que se traiga el dato de cual era el tipo de color que se queria
-    ?>
-    <div class="alert alert-<?=$_SESSION['message_type_error']?> alert-dismissible fade show" role="alert">
+  foreach ($_SESSION['message_error'] as $row) {
+?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <!-- para pintar el mensaje se hace lo siguiente -->
-      <?= $_SESSION['message_error']?>
+      <?php echo $row; ?>
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-  <?php
+  <?php }
 // <!-- aqui limpiara los datos que esten en sesion, para que no se quede el mensaje en el index, todo el tiempo -->
   session_unset();
 }
@@ -105,7 +98,7 @@ if(isset($_SESSION['message_error'])){
 	<div class="form-row" id="row1">
 		<div class="col-sm-4">
 			<h1>Guardar empleado</h1>
-		</div>		
+		</div>
 	</div>
   <div class="form-group row">
     <label for="nombre" class="col-sm-2 col-form-label">Nombre Completo *</label>
@@ -124,17 +117,17 @@ if(isset($_SESSION['message_error'])){
       <legend class="col-form-label col-sm-2 pt-0">Sexo *</legend>
       <div class="col-sm-10">
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="sexo" id="sexoMasculino" value="M" <?php if(isset($_POST['sexo'])  =='M') echo 'checked';?>>
+          <input class="form-check-input" type="radio" name="sexo" id="sexoMasculino" value="M" <?php if(isset($_POST['sexo']) && ($_POST['sexo'])=='M') echo 'checked';?>>
           <label class="form-check-label" for="sexoMasculino">
             Masculino
           </label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="sexo" id="sexoFemenino" value="F" <?php if(isset($_POST['sexo'])  =='F') echo 'checked';?>>
+          <input class="form-check-input" type="radio" name="sexo" id="sexoFemenino" value="F" <?php if(isset($_POST['sexo']) && ($_POST['sexo']) =='F') echo 'checked';?>>
           <label class="form-check-label" for="sexoFemenino">
             Femenino
           </label>
-        </div>        
+        </div>
       </div>
     </div>
   </fieldset>
@@ -145,16 +138,17 @@ if(isset($_SESSION['message_error'])){
       <option value="">:..</option>
       <?php
       if(isset($_POST['area_id'])){
-        $selecArea = $_POST['nombre'];
-      } 
-            $objetoArea = new ModeloArea();
-          $listaAreas = $objetoArea->ListarAreas();
-          while($areas = mysqli_fetch_array($listaAreas)){
-            echo '<option '.$selecArea.' value = "'.$areas[id].'">'.$areas[nombre].'</option>\n';
-          }      
+        $selecArea = ($_POST['area_id']);
+      }
+        $objetoArea = new ModeloArea();
+        $listaAreas = $objetoArea->ListarAreas();
+        while($areas = mysqli_fetch_array($listaAreas)){
+          $seleccionar=($selecArea == $areas[id])? "selected" : "";
+          echo '<option '.$seleccionar.' value = "'.$areas[id].'">'.$areas[nombre].'</option>\n';
+        }
       ?>
     </select>
-    </div>    
+    </div>
   </div>
   <div class="form-group row">
     <label for="descripciones" class="col-sm-2 col-form-label" required>Descripción *</label>
@@ -174,7 +168,7 @@ if(isset($_SESSION['message_error'])){
     </div>
   </div>
   <!-- rol -->
-    <?php 
+    <?php
     $nuevo = 0;
     $objetoRol = new ModeloRol();
     $listaRoles = $objetoRol->PresentarRoles();
@@ -183,7 +177,7 @@ if(isset($_SESSION['message_error'])){
 
       $id_rol = $roles[0];
       $nombre_rol = $roles[1];
-      
+
   ?>
   <div class="form-group row">
       <?php if($nuevo == 1){ ?>
@@ -193,17 +187,15 @@ if(isset($_SESSION['message_error'])){
         <div class="col-sm-10 offset-sm-2">
         <?php }?>
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="<?php echo 'id_rol_'.$nuevo;?>" name="id_rol[]" value="<?php echo $id_rol;?>" <?php if(isset($_POST['id_rol']) == $id_rol) echo 'checked';?>>
+
+        <input class="form-check-input" type="checkbox" id="id_rol" name="id_rol[]" value="<?php echo $id_rol;?>" <?php if(isset($_POST['id_rol'])){ if(in_array($id_rol, $_POST['id_rol'])) {echo ' checked="checked"';}} ?>>
         <label class="form-check-label" for="<?php echo 'id_rol_'.$nuevo;?>">
-          <?php echo $nombre_rol;
-           // $a = 
-            // echo $nuevo;
-          ?>
+          <?php echo $nombre_rol; ?>
         </label>
       </div>
-    </div>    
+    </div>
   </div>
-  <?php } 
+  <?php }
   ?>
   <div class="form-group row">
     <div class="col-sm-10">

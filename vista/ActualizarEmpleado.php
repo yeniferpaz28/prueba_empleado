@@ -5,9 +5,6 @@ require_once("../modelo/ModeloEmpleado.php");
 require_once("../modelo/ModeloArea.php");
 require_once("../modelo/ModeloRol.php");
 
-
-
-
 // validar valor del boletin
 $vBoletin = 0;
 if(isset($_POST['boletin'])){
@@ -57,9 +54,14 @@ if (isset($_POST['btnActualizar'])) {
       }
       if(empty(($_POST['sexo']))){
         $_SESSION['message_error'][] = 'Debe seleccionar un sexo';
+      }else if (!preg_match ("/^[FM]+$/", $sexo)) {
+            $_SESSION['message_error'][] = 'Sexo no válido';
       }
       if(trim($area_id)==''){
         $_SESSION['message_error'][] = 'Debe seleccionar una área';
+      }
+      else if (!preg_match ("/^[0-9]+$/", $area_id)) {
+        $_SESSION['message_error'][] = 'Área no válida';
       }
       if(trim($descripcion)==''){
         $_SESSION['message_error'] = 'Debe agregar una descripción';
@@ -69,7 +71,14 @@ if (isset($_POST['btnActualizar'])) {
       }
       if (!isset($_POST['id_rol']) && empty($_POST['id_rol_2'])) {
          $_SESSION['message_error'][] = 'Debe seleccionar al menos un rol';
-      }else if(!isset($_SESSION['message_error'])){
+      }else if (isset($_POST['id_rol_2'])){
+        foreach ($_POST['id_rol_2'] as $id_rol) {
+          if (!preg_match ("/^[0-9]+$/", $id_rol)) {
+            $_SESSION['message_error'][] = 'Rol no válido';
+          }
+        }
+      }
+      else if(!isset($_SESSION['message_error'])){
 
 		   $empleado = $objetoEmpleado->ActualizarEmpleados($id,$nombre,$email,$sexo,$area_id,$boletin,$descripcion);
       if (!empty($_POST['id_rol_2'])){

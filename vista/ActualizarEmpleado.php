@@ -54,8 +54,6 @@ if (isset($_POST['btnActualizar'])) {
       }
       if(empty(($_POST['sexo']))){
         $_SESSION['message_error'][] = 'Debe seleccionar un sexo';
-      }else if (!preg_match ("/^[FM]+$/", $sexo)) {
-            $_SESSION['message_error'][] = 'Sexo no válido';
       }
       if(trim($area_id)==''){
         $_SESSION['message_error'][] = 'Debe seleccionar una área';
@@ -64,20 +62,21 @@ if (isset($_POST['btnActualizar'])) {
         $_SESSION['message_error'][] = 'Área no válida';
       }
       if(trim($descripcion)==''){
-        $_SESSION['message_error'] = 'Debe agregar una descripción';
+        $_SESSION['message_error'][] = 'Debe agregar una descripción';
       }else
       if (!preg_match ("/^[a-z0-9A-Z,. ]+$/", $descripcion)) {
       $_SESSION['message_error'][] = 'Descripción no valida';
       }
       if (!isset($_POST['id_rol']) && empty($_POST['id_rol_2'])) {
          $_SESSION['message_error'][] = 'Debe seleccionar al menos un rol';
-      }else if (isset($_POST['id_rol_2'])){
-        foreach ($_POST['id_rol_2'] as $id_rol) {
-          if (!preg_match ("/^[0-9]+$/", $id_rol)) {
-            $_SESSION['message_error'][] = 'Rol no válido';
-          }
-        }
       }
+      // else if (isset($_POST['id_rol_2'])){
+      //   foreach ($_POST['id_rol_2'] as $id_rol) {
+      //     if (!preg_match ("/^[0-9]+$/", $id_rol)) {
+      //       $_SESSION['message_error'][] = 'Rol no válido';
+      //     }
+      //   }
+      // }
       else if(!isset($_SESSION['message_error'])){
 
 		   $empleado = $objetoEmpleado->ActualizarEmpleados($id,$nombre,$email,$sexo,$area_id,$boletin,$descripcion);
@@ -236,11 +235,11 @@ $presentarEmpleados = $objetoEmpleado->PresentarEmpleadosActualizar($id);
         <div class="form-check">
           <?php $presentarRoles = $objetoRol->PresentarRolesActualizar($id,$id_rol);
           if($filas = mysqli_fetch_object($presentarRoles)){   ?>
-          <input class="form-check-input" type="checkbox" id="id_rol" name="id_rol[]" value="<?php echo $id_rol;?>" checked onclick="funciones(this);">
-          <label class="form-check-label" for="id_rol">
+          <input class="form-check-input" type="checkbox" id="<?php echo 'id_rol_'.$i;?>" name="id_rol[]" value="<?php echo $id_rol;?>" checked onclick="funciones(this);">
+          <label class="form-check-label" for="<?php echo 'id_rol_'.$i;?>">
         <?php }else{ ?>
-          <input class="form-check-input" type="checkbox" id="id_rol_2" name="id_rol_2[]" value="<?php echo $id_rol;?>" >
-          <label class="form-check-label" for="id_rol_2">
+          <input class="form-check-input" type="checkbox" id="<?php echo 'id_rol_'.$i;?>" name="id_rol_2[]" value="<?php echo $id_rol;?>" <?php if(isset($_POST['id_rol_2'])){ if(in_array($id_rol, $_POST['id_rol_2'])) {echo ' checked="checked"';}} ?>>
+          <label class="form-check-label" for="<?php echo 'id_rol_'.$i;?>">
         <?php }?>
 
           <?php echo $nombre_rol; ?>

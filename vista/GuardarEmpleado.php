@@ -38,9 +38,7 @@ if (isset($_POST['btnGuardar'])) {
     }
     if(empty(($_POST['sexo']))){
       $_SESSION['message_error'][] = 'Debe seleccionar un sexo';
-    }else if (!preg_match ("/^[FM]+$/", $sexo)) {
-            $_SESSION['message_error'][] = 'Sexo no válido';
-      }
+    }
     if(trim($area_id)==''){
       $_SESSION['message_error'][] = 'Debe seleccionar una área';
     }

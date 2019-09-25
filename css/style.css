@@ -5,7 +5,49 @@
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
-/*p{
-	background-color: green;
-	width: 30px;
-}*/
+#container{
+	width: 1300px;
+}
+#thTitulo{
+	padding: 5px 0px;
+	text-align: center;
+}
+#thTl{
+	padding: 5px 0px;
+	text-align: center;
+}
+.inputDescargar{
+	border:0;
+	/*background-color: white;*/
+	background: white;
+	color:#2997DA;
+	font-weight: bold;
+}
+.divDescargar{
+	margin: 10px 40px;
+}
+#submit{
+	margin-top: 10px;
+}
+#examinar{
+	margin-bottom: 10px;
+	white-space: pre;
+}
+#row{
+	margin: 20px 10px;
+}
+#labelImportar{
+	font-size: 20px;
+}
+#volver{
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+#divNuevoUsuario{
+	margin-top:10px;
+
+	/*background: black;*/
+	/*width: 20px;*/
+	padding: 0px 40px;
+}

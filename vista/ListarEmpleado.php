@@ -3,7 +3,7 @@ session_start();
 require_once("../includes/header.php");
 require_once("../modelo/ModeloEmpleado.php");
 
-// mensaje 
+// mensaje
   if(isset($_SESSION['message'])){
 // despues de la parte del alert, la sesion hace que se traiga el dato de cual era el tipo de color que se queria
     ?>
@@ -17,7 +17,7 @@ require_once("../modelo/ModeloEmpleado.php");
   <?php
 // <!-- aqui limpiara los datos que esten en sesion, para que no se quede el mensaje en el index, todo el tiempo -->
   session_unset();
-  
+
 }
 ?>
 <div class="container-fluid">
@@ -25,9 +25,11 @@ require_once("../modelo/ModeloEmpleado.php");
 		<div class="col-sm-4">
 			<h1>Lista de empleados</h1>
 		</div>
-		<div class="col-sm-2 offset-sm-6">
-			<a href="GuardarEmpleado.php" class="btn btn-primary">Nuevo Usuario</a>		
-		</div>
+		<div class="col-sm-3 offset-sm-5" id="divNuevoUsuario">
+			<a href="GuardarEmpleado.php" class="btn btn-primary" >Nuevo Usuario</a>
+
+      <a href="ArchivosPlanos.php" class="btn btn-primary">Subir archivo</a>
+    </div>
 	</div>
 <table class="table table-hover">
   <thead class="table table-primary">
@@ -42,7 +44,7 @@ require_once("../modelo/ModeloEmpleado.php");
       <th scope="col">Eliminar</th>
     </tr>
   </thead>
-  <tbody>    
+  <tbody>
 	<?php
 	$objetoEmpleados = new ModeloEmpleado();
 
@@ -55,7 +57,7 @@ require_once("../modelo/ModeloEmpleado.php");
       $boletin = $filas->boletin;
       $descripcion = $filas->descripcion;
       $area_id = $filas->area_id;
-      $area_nombre = $filas->area_nombre; 
+      $area_nombre = $filas->area_nombre;
 	?>
     <tr>
       <td><?php echo $nombre;?></td>
@@ -65,7 +67,7 @@ require_once("../modelo/ModeloEmpleado.php");
       <td><?php echo $boletin;?></td>
       <td><a href="DetallesEmpleado.php?id=<?php echo $id?>"><i class="fas fa-clipboard-list"></i></a></td>
       <td><a href="ActualizarEmpleado.php?id=<?php echo $id?>"><i class="fas fa-edit"></i></a></td>
-      <td><a href="EliminarEmpleado.php?id=<?php echo $id?>"><i class="fas fa-trash-alt"></i></a></td>         
+      <td><a href="EliminarEmpleado.php?id=<?php echo $id?>"><i class="fas fa-trash-alt"></i></a></td>
     </tr>
     <?php
 		}

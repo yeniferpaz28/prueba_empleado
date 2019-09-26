@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-09-2019 a las 23:30:28
+-- Tiempo de generación: 26-09-2019 a las 02:10:27
 -- Versión del servidor: 10.1.37-MariaDB
 -- Versión de PHP: 7.3.1
 
@@ -46,6 +46,27 @@ INSERT INTO `areas` (`id`, `nombre`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `black_list`
+--
+
+CREATE TABLE `black_list` (
+  `id` int(11) NOT NULL,
+  `fullname` varchar(255) NOT NULL,
+  `phone` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `black_list`
+--
+
+INSERT INTO `black_list` (`id`, `fullname`, `phone`) VALUES
+(1, 'Olga Delgado', '3217646568'),
+(2, 'Ernesto Carrasco', '3163289167'),
+(3, 'Trinidad Calvo', '3177505555');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `empleados`
 --
 
@@ -59,20 +80,6 @@ CREATE TABLE `empleados` (
   `descripcion` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `empleados`
---
-
-INSERT INTO `empleados` (`id`, `nombre`, `email`, `sexo`, `area_id`, `boletin`, `descripcion`) VALUES
-(2, 'jenifer', 'jeniferpaz_95@hotmail.com', 'F', 0, 2, '1'),
-(3, 'maily', 'faysuri1998@hotmail.com', 'F', 0, 1, '1'),
-(4, 'OFICINA180', 'ytpaz1@gmail.com', 'F', 0, 2, '1'),
-(5, 'afknjs', 'ytpaz1@gmail.com', 'M', 0, 1, '1'),
-(8, 'maily', 'jeniferpaz_95@hotmail.com', 'F', 0, 1, '1'),
-(9, 'maily', 'jeniferpaz_95@hotmail.com', 'M', 0, 1, '1'),
-(10, 'yineth estefania paz', 'faysuri1998@hotmail.com', 'F', 0, 2, '1'),
-(12, 'esteban gutierrez', 'admin@cohett.com', 'F', 3, 0, 'holassssssssss');
-
 -- --------------------------------------------------------
 
 --
@@ -83,6 +90,23 @@ CREATE TABLE `empleado_rol` (
   `empleado_id` int(11) NOT NULL COMMENT 'identificador del empleado',
   `rol_id` int(11) NOT NULL COMMENT 'identificador del rol'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `empleado_rol`
+--
+
+INSERT INTO `empleado_rol` (`empleado_id`, `rol_id`) VALUES
+(97, 3),
+(98, 1),
+(99, 1),
+(100, 1),
+(101, 1),
+(103, 1),
+(116, 1),
+(117, 1),
+(118, 1),
+(119, 1),
+(120, 1);
 
 -- --------------------------------------------------------
 
@@ -100,9 +124,9 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `nombre`) VALUES
-(1, 'profesional de proyectos-desarrollador'),
-(2, 'gerente estrategico'),
-(3, 'auxiliar administrativo');
+(1, 'Profesional de proyectos-desarrollador'),
+(2, 'Gerente estrategico'),
+(3, 'Auxiliar administrativo');
 
 --
 -- Índices para tablas volcadas
@@ -112,6 +136,12 @@ INSERT INTO `roles` (`id`, `nombre`) VALUES
 -- Indices de la tabla `areas`
 --
 ALTER TABLE `areas`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `black_list`
+--
+ALTER TABLE `black_list`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -137,10 +167,16 @@ ALTER TABLE `areas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'identificardor del area', AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT de la tabla `black_list`
+--
+ALTER TABLE `black_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT de la tabla `empleados`
 --
 ALTER TABLE `empleados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1549;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
